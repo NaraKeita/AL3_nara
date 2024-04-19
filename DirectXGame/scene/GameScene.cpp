@@ -2,6 +2,7 @@
 #include "TextureManager.h"
 #include <cassert>
 #include "ImGuiManager.h"
+#include"AxisIndicator.h"
 
 GameScene::GameScene() {
 	delete model_;
@@ -34,6 +35,10 @@ void GameScene::Initialize() {
 	voiceHandle_ = audio_->PlayWave(soundDateHandle_, true);
 	//デバッグカメラの生成
 	debugCamera_ = new DebugCamera(WinApp::kWindowWidth, WinApp::kWindowHeight);
+	//軸方向表示の表示を有効にする
+	AxisIndicator::GetInstance()->SetVisible(true);
+	//軸方向表示が参照するビュープロジェクションを指定する(アドレス渡し)
+	AxisIndicator::GetInstance()->SetTargetViewProjection(&debugCamera_->GetViewProjection());
 }
 
 void GameScene::Update() { 
@@ -56,7 +61,9 @@ void GameScene::Update() {
 	ImGui::InputFloat3("InputFloat3", inputFloat3);
 	ImGui::SliderFloat3("SliderFloat3", inputFloat3, 0.0f, 1.0f);
 	ImGui::ShowDemoWindow();
+	//デバッグカメラの更新
 	debugCamera_->Update();
+
 }
 
 void GameScene::Draw() {
